@@ -7,12 +7,12 @@
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Display personal streak statistics"
+              "text": "No streak yet — tap Check streak to start your first day."
             }
           }
         ],
         "send": {
-          "text": "/stats"
+          "text": "/stats", "userId": 104, "chatId": 104
         }
       }
     ]

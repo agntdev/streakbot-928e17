@@ -5,14 +5,14 @@
       {
         "expect": [
           {
-            "method": "sendMessage",
+            "method": "editMessageText",
             "payload": {
-              "text": "View personal statistics"
+              "text": "No streak yet — tap Check streak to start your first day."
             }
           }
         ],
         "send": {
-          "callback": "streak:stats"
+        "callback": "streak:stats", "userId": 105, "chatId": 105
         }
       }
     ]

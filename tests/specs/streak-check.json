@@ -5,14 +5,14 @@
       {
         "expect": [
           {
-            "method": "sendMessage",
+            "method": "editMessageText",
             "payload": {
-              "text": "Quick action to check streak progress"
+              "text": "Your new streak starts today: 1 day. Check in again after 24 hours."
             }
           }
         ],
         "send": {
-          "callback": "streak:check"
+        "callback": "streak:check", "userId": 101, "chatId": 101
         }
       }
     ]

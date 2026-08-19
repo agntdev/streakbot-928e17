@@ -1,17 +1,16 @@
 import { Composer } from "grammy";
+import type { Ctx } from "../bot.js";
+import { inlineButton, inlineKeyboard, registerMainMenuItem } from "../toolkit/index.js";
+import { relapse } from "../streaks/service.js";
 
-// SCAFFOLD — generated from the bot blueprint BEFORE the agent runs.
-// Keep a LIVE registration (.command / .callbackQuery / …) so this feature is
-// never an empty stub. Replace the reply body with real logic + copy; if you
-// change the user-facing text, update tests/specs to match EXACTLY.
-// Do NOT rewrite src/bot.ts — buildBot() already auto-loads this module.
-// Menu: wire this into /start via registerMainMenuItem({ label: "Relapse", data: "streak:relapse" }) if the toolkit exposes it.
-
-const composer = new Composer();
+registerMainMenuItem({ label: "↩️ Log relapse", data: "streak:relapse", order: 20 });
+const composer = new Composer<Ctx>();
 
 composer.callbackQuery("streak:relapse", async (ctx) => {
   await ctx.answerCallbackQuery();
-  await ctx.reply("End current streak and reset counter");
+  await ctx.editMessageText(await relapse(ctx), {
+    reply_markup: inlineKeyboard([[inlineButton("✅ Check streak", "streak:check"), inlineButton("⬅️ Back to menu", "menu:main")]]),
+  });
 });
 
 export default composer;

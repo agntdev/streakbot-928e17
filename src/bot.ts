@@ -1,5 +1,5 @@
 import { Composer } from "grammy";
-import { createBot, type BotContext, type CreateBotOptions } from "./toolkit/index.js";
+import { adminChatId, createBot, type BotContext, type CreateBotOptions } from "./toolkit/index.js";
 import type { StorageAdapter } from "grammy";
 
 // The per-chat session shape (ephemeral conversation state only). Extend as the
@@ -48,6 +48,17 @@ export async function buildBot(token: string, opts: BuildBotOptions = {}) {
     storage: opts.storage,
     telemetryEnv: opts.telemetryEnv,
     telemetryReporterOptions: opts.telemetryReporterOptions,
+    onError: async (err) => {
+      console.error("[streakbot] unhandled error:", err);
+      const ctx = (err as { ctx?: Ctx }).ctx;
+      const owner = ctx && adminChatId(ctx as Ctx & { env?: Record<string, unknown> });
+      if (!ctx || !owner) return;
+      try {
+        await ctx.api.sendMessage(owner, "StreakBot hit a problem. Please try the action again.");
+      } catch {
+        // A failed admin notification must not cause a second error loop.
+      }
+    },
   });
 
   const handlers = opts.handlers ?? (await loadHandlersFromDisk());
