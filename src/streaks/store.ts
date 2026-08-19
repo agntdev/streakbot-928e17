@@ -10,6 +10,18 @@ export interface UserStreak {
   streakStartTimestamp: number | null;
   lastCheckInTimestamp: number | null;
   highestStreakEver: number;
+  auditLog: StreakAuditEntry[];
+}
+
+/** A durable record of an owner-requested streak correction. */
+export interface StreakAuditEntry {
+  timestamp: number;
+  userId: number;
+  previousCurrentStreak: number;
+  previousHighestStreak: number;
+  newCurrentStreak: number;
+  newHighestStreak: number;
+  source: "setstreak";
 }
 
 interface KeyValueStore {

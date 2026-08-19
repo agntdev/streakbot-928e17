@@ -1,0 +1,44 @@
+[
+  {
+    "name": "/setstreak rejects missing, negative, and non-integer values",
+    "steps": [
+      {
+        "send": { "text": "/setstreak", "userId": 201, "chatId": 201 },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Usage: /setstreak <non-negative integer>" } }]
+      },
+      {
+        "send": { "text": "/setstreak -1", "userId": 201, "chatId": 201 },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Usage: /setstreak <non-negative integer>" } }]
+      },
+      {
+        "send": { "text": "/setstreak 1.5", "userId": 201, "chatId": 201 },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Usage: /setstreak <non-negative integer>" } }]
+      }
+    ]
+  },
+  {
+    "name": "/setstreak updates the current and highest streak",
+    "steps": [
+      {
+        "send": { "text": "/setstreak 4", "userId": 202, "chatId": 202 },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Your current streak is now 4 days. Highest streak: 4 days." } }]
+      },
+      {
+        "send": { "text": "/stats", "userId": 202, "chatId": 202 },
+        "expect": [{ "method": "sendMessage" }]
+      },
+      {
+        "send": { "text": "/leaderboard", "userId": 202, "chatId": 202 },
+        "expect": [{ "method": "sendMessage" }]
+      },
+      {
+        "send": { "text": "/setstreak 0", "userId": 202, "chatId": 202 },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Your current streak is now 0 days. Highest streak: 4 days." } }]
+      },
+      {
+        "send": { "text": "/stats", "userId": 202, "chatId": 202 },
+        "expect": [{ "method": "sendMessage" }]
+      }
+    ]
+  }
+]

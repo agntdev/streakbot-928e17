@@ -26,6 +26,7 @@ function fresh(ctx: Ctx, at: number): UserStreak {
     streakStartTimestamp: at,
     lastCheckInTimestamp: at,
     highestStreakEver: 1,
+    auditLog: [],
   };
 }
 
@@ -62,6 +63,42 @@ export async function relapse(ctx: StreakCtx): Promise<string> {
   user.lastCheckInTimestamp = null;
   await putUser(ctx, user);
   return `That streak is closed. Your best is ${user.highestStreakEver} day${user.highestStreakEver === 1 ? "" : "s"}. Tap Check streak when you're ready to start again.`;
+}
+
+/**
+ * Corrects only the calling user's streak. The profile, current streak, best
+ * streak, and audit entry live in one durable user document, so this is a
+ * single record write rather than a partially-applied multi-record update.
+ */
+export async function setStreak(ctx: StreakCtx, length: number): Promise<string> {
+  if (!ctx.from) return "I couldn't identify your account. Try again in a private chat.";
+
+  const at = now();
+  let user = await profile(ctx);
+  if (!user) {
+    user = { ...fresh(ctx, at), currentStreakLength: 0, highestStreakEver: 0, streakStartTimestamp: null, lastCheckInTimestamp: null };
+  }
+
+  const previousCurrentStreak = user.currentStreakLength;
+  const previousHighestStreak = user.highestStreakEver;
+  const newHighestStreak = Math.max(previousHighestStreak, length);
+  user.currentStreakLength = length;
+  user.highestStreakEver = newHighestStreak;
+  user.displayName = displayName(ctx);
+  user.streakStartTimestamp = length === 0 ? null : at - (length - 1) * DAY;
+  user.lastCheckInTimestamp = length === 0 ? null : at;
+  user.auditLog = [...(user.auditLog ?? []), {
+    timestamp: at,
+    userId: user.telegramId,
+    previousCurrentStreak,
+    previousHighestStreak,
+    newCurrentStreak: length,
+    newHighestStreak,
+    source: "setstreak",
+  }];
+
+  await putUser(ctx, user);
+  return `Your current streak is now ${length} day${length === 1 ? "" : "s"}. Highest streak: ${newHighestStreak} day${newHighestStreak === 1 ? "" : "s"}.`;
 }
 
 export async function stats(ctx: StreakCtx): Promise<string> {
