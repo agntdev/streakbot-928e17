@@ -7,12 +7,12 @@
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Show public leaderboard of top 10 users"
+              "text": "No public streaks yet — tap Check streak to be the first."
             }
           }
         ],
         "send": {
-          "text": "/leaderboard"
+          "text": "/leaderboard", "userId": 106, "chatId": 106
         }
       }
     ]

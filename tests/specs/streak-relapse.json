@@ -5,14 +5,14 @@
       {
         "expect": [
           {
-            "method": "sendMessage",
+            "method": "editMessageText",
             "payload": {
-              "text": "End current streak and reset counter"
+              "text": "You don't have an active streak yet — tap Check streak to begin one."
             }
           }
         ],
         "send": {
-          "callback": "streak:relapse"
+        "callback": "streak:relapse", "userId": 103, "chatId": 103
         }
       }
     ]

@@ -7,7 +7,7 @@
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Check or start a new streak based on user status"
+              "text": "Your new streak starts today: 1 day. Check in again after 24 hours."
             }
           }
         ],

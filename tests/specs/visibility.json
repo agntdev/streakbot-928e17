@@ -1,0 +1,24 @@
+[
+  {
+    "name": "/hide opts a user out of the leaderboard",
+    "steps": [
+      {
+        "send": { "text": "/hide", "userId": 107, "chatId": 107 },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "You're hidden from the public leaderboard." } }]
+      },
+      {
+        "send": { "text": "/show", "userId": 107, "chatId": 107 },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "You're back on the public leaderboard." } }]
+      }
+    ]
+  },
+  {
+    "name": "visibility button opens controls",
+    "steps": [
+      {
+        "send": { "callback": "streak:visibility", "userId": 108, "chatId": 108 },
+        "expect": [{ "method": "editMessageText", "payload": { "text": "Choose whether your display name appears on the public leaderboard." } }]
+      }
+    ]
+  }
+]
